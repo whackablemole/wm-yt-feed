@@ -1,0 +1,10 @@
+node_modules
+dist
+coverage
+.git
+.env
+*.sqlite
+*.sqlite3
+*.db
+.DS_Store
+tests

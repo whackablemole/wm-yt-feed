@@ -34,11 +34,11 @@ Dockerfile, docker-compose.yml, .env.example
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create the project directory structure (`src/commands/`, `src/services/`, `src/db/`, `src/discord/`, `tests/unit/`, `tests/integration/`) plus placeholder `Dockerfile`, `docker-compose.yml`, and `.env.example` at repo root, per plan.md's Project Structure
-- [ ] T002 Initialize the Node.js/TypeScript project: `package.json`, `tsconfig.json` with `strict: true` and related strict flags (`noImplicitAny`, `strictNullChecks`, etc.) enabled per constitution Principle III
-- [ ] T003 [P] Configure ESLint + Prettier for linting/formatting in `.eslintrc.cjs` / `.prettierrc`
-- [ ] T004 [P] Configure the Vitest test runner and a `test` script in `package.json`, per research.md §6
-- [ ] T005 [P] Add a `typecheck` npm script (`tsc --noEmit`) to `package.json`, to be used as the CI type-check gate required by the constitution's Development Workflow
+- [x] T001 Create the project directory structure (`src/commands/`, `src/services/`, `src/db/`, `src/discord/`, `tests/unit/`, `tests/integration/`) plus placeholder `Dockerfile`, `docker-compose.yml`, and `.env.example` at repo root, per plan.md's Project Structure
+- [x] T002 Initialize the Node.js/TypeScript project: `package.json`, `tsconfig.json` with `strict: true` and related strict flags (`noImplicitAny`, `strictNullChecks`, etc.) enabled per constitution Principle III
+- [x] T003 [P] Configure ESLint + Prettier for linting/formatting in `.eslintrc.cjs` / `.prettierrc`
+- [x] T004 [P] Configure the Vitest test runner and a `test` script in `package.json`, per research.md §6
+- [x] T005 [P] Add a `typecheck` npm script (`tsc --noEmit`) to `package.json`, to be used as the CI type-check gate required by the constitution's Development Workflow
 
 **Checkpoint**: Project scaffolding compiles/lints/tests-run with zero source files — ready for foundational work.
 
@@ -50,15 +50,15 @@ Dockerfile, docker-compose.yml, .env.example
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Define the Drizzle ORM schema for `MonitoredChannel`, `ServerConfiguration`, and `AnnouncedVideo` (including the unique constraints from data-model.md) in `src/db/schema.ts`
-- [ ] T007 Set up Drizzle migrations tooling and generate the initial migration for the schema from T006 in `src/db/migrations/`
-- [ ] T008 Implement the SQLite database client/connection, with the database file path configurable via an environment variable, in `src/db/client.ts`
-- [ ] T009 Implement the discord.js client bootstrap (login, required gateway intents, `ready` event handling) in `src/discord/client.ts`
-- [ ] T010 Implement the slash-command registration scaffold that deploys the `/youtube` command group to Discord in `src/discord/register-commands.ts`
-- [ ] T011 Implement a shared "Manage Server" permission-check helper used by every configuration command, per FR-013 and contracts/slash-commands.md, in `src/discord/permissions.ts`
-- [ ] T012 [P] Unit test for the "Manage Server" permission-check helper (allows admins, rejects non-admin members) in `tests/unit/discord/permissions.test.ts` (covers FR-013/SC-006, per spec.md US1 Acceptance Scenario 6 and US2 Acceptance Scenario 5)
-- [ ] T013 [P] Implement a structured logger utility (used to surface failures per spec.md Edge Cases rather than fail silently) in `src/lib/logger.ts`
-- [ ] T014 Wire the DB client, discord.js client bootstrap, command registration, and logger together in the process entrypoint `src/index.ts`
+- [x] T006 Define the Drizzle ORM schema for `MonitoredChannel`, `ServerConfiguration`, and `AnnouncedVideo` (including the unique constraints from data-model.md) in `src/db/schema.ts`
+- [x] T007 Set up Drizzle migrations tooling and generate the initial migration for the schema from T006 in `src/db/migrations/`
+- [x] T008 Implement the SQLite database client/connection, with the database file path configurable via an environment variable, in `src/db/client.ts`
+- [x] T009 Implement the discord.js client bootstrap (login, required gateway intents, `ready` event handling) in `src/discord/client.ts`
+- [x] T010 Implement the slash-command registration scaffold that deploys the `/youtube` command group to Discord in `src/discord/register-commands.ts`
+- [x] T011 Implement a shared "Manage Server" permission-check helper used by every configuration command, per FR-013 and contracts/slash-commands.md, in `src/discord/permissions.ts`
+- [x] T012 [P] Unit test for the "Manage Server" permission-check helper (allows admins, rejects non-admin members) in `tests/unit/discord/permissions.test.ts` (covers FR-013/SC-006, per spec.md US1 Acceptance Scenario 6 and US2 Acceptance Scenario 5)
+- [x] T013 [P] Implement a structured logger utility (used to surface failures per spec.md Edge Cases rather than fail silently) in `src/lib/logger.ts`
+- [x] T014 Wire the DB client, discord.js client bootstrap, command registration, and logger together in the process entrypoint `src/index.ts`
 
 **Checkpoint**: Foundation ready — bot connects to Discord, has an empty command group registered, can read/write the database, and the admin-only permission check is implemented and tested. User story implementation can now begin.
 
@@ -72,18 +72,18 @@ Dockerfile, docker-compose.yml, .env.example
 
 ### Tests for User Story 1 ⚠️
 
-- [ ] T015 [P] [US1] Unit test for channel-reference resolution (URL/handle/ID → canonical channel ID, and rejection of unresolvable input) in `tests/unit/services/youtube.test.ts`
-- [ ] T016 [P] [US1] Unit test for the `MonitoredChannel` repository, including the unique-constraint/duplicate-add behavior, in `tests/unit/db/repositories/monitored-channel.test.ts`
+- [x] T015 [P] [US1] Unit test for channel-reference resolution (URL/handle/ID → canonical channel ID, and rejection of unresolvable input) in `tests/unit/services/youtube.test.ts`
+- [x] T016 [P] [US1] Unit test for the `MonitoredChannel` repository, including the unique-constraint/duplicate-add behavior, in `tests/unit/db/repositories/monitored-channel.test.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T017 [US1] Implement the `MonitoredChannel` repository (create, list, remove, find-by-canonical-id) in `src/db/repositories/monitored-channel.ts` (depends on T006)
-- [ ] T018 [US1] Implement channel-reference resolution (URL/handle/ID → canonical channel ID via the channel's public page, per research.md §3) in `src/services/youtube.ts`
-- [ ] T019 [US1] Implement the `/youtube add` command handler, using the permission helper from T011 (FR-001, FR-004, FR-005, FR-013) in `src/commands/add-channel.ts`
-- [ ] T020 [US1] Implement the `/youtube remove` command handler, using the permission helper from T011 (FR-002, FR-013) in `src/commands/remove-channel.ts`
-- [ ] T021 [US1] Implement the `/youtube list` command handler (FR-003, FR-013) in `src/commands/list-channels.ts`
-- [ ] T022 [US1] Register the `add`/`remove`/`list` subcommand definitions (per contracts/slash-commands.md) in `src/discord/register-commands.ts`
-- [ ] T023 [P] [US1] Integration test covering add → list → remove, duplicate-add, invalid-channel-input, and non-admin-permission-denied scenarios (spec.md Acceptance Scenarios 1–6) in `tests/integration/watch-list.test.ts`
+- [x] T017 [US1] Implement the `MonitoredChannel` repository (create, list, remove, find-by-canonical-id) in `src/db/repositories/monitored-channel.ts` (depends on T006)
+- [x] T018 [US1] Implement channel-reference resolution (URL/handle/ID → canonical channel ID via the channel's public page, per research.md §3) in `src/services/youtube.ts`
+- [x] T019 [US1] Implement the `/youtube add` command handler, using the permission helper from T011 (FR-001, FR-004, FR-005, FR-013) in `src/commands/add-channel.ts`
+- [x] T020 [US1] Implement the `/youtube remove` command handler, using the permission helper from T011 (FR-002, FR-013) in `src/commands/remove-channel.ts`
+- [x] T021 [US1] Implement the `/youtube list` command handler (FR-003, FR-013) in `src/commands/list-channels.ts`
+- [x] T022 [US1] Register the `add`/`remove`/`list` subcommand definitions (per contracts/slash-commands.md) in `src/discord/register-commands.ts`
+- [x] T023 [P] [US1] Integration test covering add → list → remove, duplicate-add, invalid-channel-input, and non-admin-permission-denied scenarios (spec.md Acceptance Scenarios 1–6) in `tests/integration/watch-list.test.ts`
 
 **Checkpoint**: User Story 1 is fully functional and independently testable — a working, persisted watch list exists even with no announcement channel configured yet.
 
@@ -97,15 +97,15 @@ Dockerfile, docker-compose.yml, .env.example
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T024 [P] [US2] Unit test for the `ServerConfiguration` repository (get/upsert, replace-not-add behavior) in `tests/unit/db/repositories/server-config.test.ts`
-- [ ] T025 [P] [US2] Unit test for the `/youtube set-channel` command handler, including the bot-permission rejection path, in `tests/unit/commands/set-announcement-channel.test.ts`
+- [x] T024 [P] [US2] Unit test for the `ServerConfiguration` repository (get/upsert, replace-not-add behavior) in `tests/unit/db/repositories/server-config.test.ts`
+- [x] T025 [P] [US2] Unit test for the `/youtube set-channel` command handler, including the bot-permission rejection path, in `tests/unit/commands/set-announcement-channel.test.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T026 [US2] Implement the `ServerConfiguration` repository (get/upsert announcement channel per guild) in `src/db/repositories/server-config.ts` (depends on T006)
-- [ ] T027 [US2] Implement the `/youtube set-channel` command handler, using the permission helper from T011 and checking the bot's send-message permission in the target channel before saving (FR-006, FR-007, FR-008, FR-013) in `src/commands/set-announcement-channel.ts`
-- [ ] T028 [US2] Register the `set-channel` subcommand definition in `src/discord/register-commands.ts`
-- [ ] T029 [P] [US2] Integration test covering set → replace → bot-permission-denied → non-admin-permission-denied scenarios (spec.md Acceptance Scenarios 1–5) in `tests/integration/announcement-channel.test.ts`
+- [x] T026 [US2] Implement the `ServerConfiguration` repository (get/upsert announcement channel per guild) in `src/db/repositories/server-config.ts` (depends on T006)
+- [x] T027 [US2] Implement the `/youtube set-channel` command handler, using the permission helper from T011 and checking the bot's send-message permission in the target channel before saving (FR-006, FR-007, FR-008, FR-013) in `src/commands/set-announcement-channel.ts`
+- [x] T028 [US2] Register the `set-channel` subcommand definition in `src/discord/register-commands.ts`
+- [x] T029 [P] [US2] Integration test covering set → replace → bot-permission-denied → non-admin-permission-denied scenarios (spec.md Acceptance Scenarios 1–5) in `tests/integration/announcement-channel.test.ts`
 
 **Checkpoint**: User Stories 1 AND 2 both work independently — full configuration surface is complete.
 
@@ -119,18 +119,18 @@ Dockerfile, docker-compose.yml, .env.example
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T030 [P] [US3] Unit test for the `AnnouncedVideo` repository (record/isAnnounced per guild+video) in `tests/unit/db/repositories/announced-video.test.ts`
-- [ ] T031 [P] [US3] Unit test for YouTube Atom feed fetch/parse and new-video diff logic (multiple new videos, none new) in `tests/unit/services/youtube-feed.test.ts`
-- [ ] T032 [P] [US3] Unit test for announcement message formatting (title + link) in `tests/unit/services/announcer.test.ts`
+- [x] T030 [P] [US3] Unit test for the `AnnouncedVideo` repository (record/isAnnounced per guild+video) in `tests/unit/db/repositories/announced-video.test.ts`
+- [x] T031 [P] [US3] Unit test for YouTube Atom feed fetch/parse and new-video diff logic (multiple new videos, none new) in `tests/unit/services/youtube-feed.test.ts`
+- [x] T032 [P] [US3] Unit test for announcement message formatting (title + link) in `tests/unit/services/announcer.test.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T033 [US3] Implement the `AnnouncedVideo` repository (record announced video, check if already announced, scoped per guild) in `src/db/repositories/announced-video.ts` (depends on T006)
-- [ ] T034 [US3] Implement YouTube channel Atom feed fetch/parse (latest videos per channel) in `src/services/youtube.ts`, extending T018
-- [ ] T035 [US3] Implement the announcer service that formats and posts a title+link message via discord.js (FR-010) in `src/services/announcer.ts`
-- [ ] T036 [US3] Implement the poller service: scheduled loop over all monitored channels, diffs feed results against `AnnouncedVideo`, posts all new videos per channel in chronological (oldest-first) order, and staggers outbound requests (FR-009, FR-011, FR-016; research.md §5, §7) in `src/services/poller.ts`
-- [ ] T037 [US3] Wire the poller's scheduled start (node-cron) into `src/index.ts`
-- [ ] T038 [P] [US3] Integration test: a poll cycle with multiple new videos posts each exactly once in oldest-first order, a following poll posts no duplicates, and two servers monitoring the same channel each get independent announcements (spec.md Acceptance Scenarios 1–4, SC-005) in `tests/integration/poll-and-announce.test.ts`
+- [x] T033 [US3] Implement the `AnnouncedVideo` repository (record announced video, check if already announced, scoped per guild) in `src/db/repositories/announced-video.ts` (depends on T006)
+- [x] T034 [US3] Implement YouTube channel Atom feed fetch/parse (latest videos per channel) in `src/services/youtube.ts`, extending T018
+- [x] T035 [US3] Implement the announcer service that formats and posts a title+link message via discord.js (FR-010) in `src/services/announcer.ts`
+- [x] T036 [US3] Implement the poller service: scheduled loop over all monitored channels, diffs feed results against `AnnouncedVideo`, posts all new videos per channel in chronological (oldest-first) order, and staggers outbound requests (FR-009, FR-011, FR-016; research.md §5, §7) in `src/services/poller.ts`
+- [x] T037 [US3] Wire the poller's scheduled start (node-cron) into `src/index.ts`
+- [x] T038 [P] [US3] Integration test: a poll cycle with multiple new videos posts each exactly once in oldest-first order, a following poll posts no duplicates, and two servers monitoring the same channel each get independent announcements (spec.md Acceptance Scenarios 1–4, SC-005) in `tests/integration/poll-and-announce.test.ts`
 
 **Checkpoint**: All user stories should now be independently functional — the bot's core value (automatic announcements) is delivered end-to-end.
 
@@ -144,13 +144,13 @@ Dockerfile, docker-compose.yml, .env.example
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T039 [P] [US4] Integration test that simulates a restart (closes and reopens the DB connection) and confirms watch list, announcement-channel configuration, and announced-video history all persist unchanged (spec.md Acceptance Scenarios 1–2, SC-003, SC-004) in `tests/integration/restart-resilience.test.ts`
+- [x] T039 [P] [US4] Integration test that simulates a restart (closes and reopens the DB connection) and confirms watch list, announcement-channel configuration, and announced-video history all persist unchanged (spec.md Acceptance Scenarios 1–2, SC-003, SC-004) in `tests/integration/restart-resilience.test.ts`
 
 ### Implementation for User Story 4
 
-- [ ] T040 [US4] Confirm/adjust the SQLite database file path (from T008) to default into a path intended for a mounted Docker volume, documented in `.env.example`, in `src/db/client.ts`
-- [ ] T041 [US4] Run pending migrations automatically and idempotently on bot startup (safe to run every restart) in `src/index.ts`
-- [ ] T042 [US4] Add the named volume for the SQLite file to `docker-compose.yml`, matching the path from T040 (FR-014)
+- [x] T040 [US4] Confirm/adjust the SQLite database file path (from T008) to default into a path intended for a mounted Docker volume, documented in `.env.example`, in `src/db/client.ts`
+- [x] T041 [US4] Run pending migrations automatically and idempotently on bot startup (safe to run every restart) in `src/index.ts`
+- [x] T042 [US4] Add the named volume for the SQLite file to `docker-compose.yml`, matching the path from T040 (FR-014)
 
 **Checkpoint**: All user stories independently functional and durable across restarts.
 
@@ -160,11 +160,13 @@ Dockerfile, docker-compose.yml, .env.example
 
 **Purpose**: Improvements that affect multiple user stories and finalize deployability
 
-- [ ] T043 [P] Write `Dockerfile` as a multi-stage build producing a minimal production image, built for `linux/amd64` and `linux/arm64` via Docker Buildx (constitution Principles II & IV)
-- [ ] T044 [P] Add a CI workflow that runs `typecheck` (T005) and the unit/integration test suites, and validates a multi-arch Docker build including `linux/arm64`, on every change (constitution Development Workflow)
-- [ ] T045 [P] Write `README.md` covering setup, required environment variables, and deployment via `docker compose up`
+- [x] T043 [P] Write `Dockerfile` as a multi-stage build producing a minimal production image, built for `linux/amd64` and `linux/arm64` via Docker Buildx (constitution Principles II & IV)
+- [x] T044 [P] Add a CI workflow that runs `typecheck` (T005) and the unit/integration test suites, and validates a multi-arch Docker build including `linux/arm64`, on every change (constitution Development Workflow)
+- [x] T045 [P] Write `README.md` covering setup, required environment variables, and deployment via `docker compose up`
 - [ ] T046 Run the quickstart.md validation guide end-to-end against a real Discord test server and a real YouTube channel, timing the initial setup (add channel + set announcement channel) against the under-2-minute target in SC-001
+      _(blocked: requires a real Discord bot token + test server, which this environment doesn't have — everything else has been validated with mocks/unit+integration tests; this is the one remaining manual step for whoever holds the credentials)_
 - [ ] T047 [P] Measure and document the running container's RAM/CPU usage against the indicative "well under 256MB RAM, a fraction of a vCPU" budget from plan.md's Constraints (constitution Principle IV)
+      _(blocked: a real DISCORD_TOKEN is needed to reach a genuinely "connected and idle" state to measure; a dummy token fails auth and exits before `docker stats` can sample it — image size was verified instead, see README)_
 
 ---
 

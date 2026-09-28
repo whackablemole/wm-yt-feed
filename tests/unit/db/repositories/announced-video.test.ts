@@ -34,4 +34,22 @@ describe('AnnouncedVideoRepository', () => {
     repo.recordAnnounced({ guildId: 'guild-1', monitoredChannelId: channel.id, youtubeVideoId: 'video-1' });
     expect(repo.isAnnounced('guild-2', 'video-1')).toBe(false);
   });
+
+  describe('hasAnyRecorded', () => {
+    it('is false until any video has been recorded for that guild+channel', () => {
+      const db = createTestDb();
+      const channelRepo = new MonitoredChannelRepository(db);
+      const repo = new AnnouncedVideoRepository(db);
+      const channel = channelRepo.add({
+        guildId: 'guild-1',
+        youtubeChannelId: 'UC1',
+        displayName: 'Chan',
+        addedByUserId: 'u1',
+      });
+
+      expect(repo.hasAnyRecorded('guild-1', channel.id)).toBe(false);
+      repo.recordAnnounced({ guildId: 'guild-1', monitoredChannelId: channel.id, youtubeVideoId: 'video-1' });
+      expect(repo.hasAnyRecorded('guild-1', channel.id)).toBe(true);
+    });
+  });
 });

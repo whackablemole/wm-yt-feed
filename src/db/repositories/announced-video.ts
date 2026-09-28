@@ -20,6 +20,16 @@ export class AnnouncedVideoRepository {
     return row !== undefined;
   }
 
+  /** True once at least one video has ever been recorded for this guild+channel — used to detect the very first poll for a newly monitored channel, so its existing back-catalog can be seeded rather than announced. */
+  hasAnyRecorded(guildId: string, monitoredChannelId: number): boolean {
+    const row = this.db
+      .select({ id: announcedVideos.id })
+      .from(announcedVideos)
+      .where(and(eq(announcedVideos.guildId, guildId), eq(announcedVideos.monitoredChannelId, monitoredChannelId)))
+      .get();
+    return row !== undefined;
+  }
+
   recordAnnounced(input: RecordAnnouncedInput): void {
     this.db.insert(announcedVideos).values({ ...input, announcedAt: new Date() }).run();
   }

@@ -26,7 +26,7 @@ export const announcedVideos = sqliteTable(
     guildId: text('guild_id').notNull(),
     monitoredChannelId: integer('monitored_channel_id')
       .notNull()
-      .references(() => monitoredChannels.id),
+      .references(() => monitoredChannels.id, { onDelete: 'cascade' }),
     youtubeVideoId: text('youtube_video_id').notNull(),
     announcedAt: integer('announced_at', { mode: 'timestamp' }).notNull(),
   },

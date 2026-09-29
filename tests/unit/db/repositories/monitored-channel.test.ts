@@ -1,12 +1,16 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { createTestDb } from '../../../helpers/db.js';
 import { MonitoredChannelRepository } from '../../../../src/db/repositories/monitored-channel.js';
+import { AnnouncedVideoRepository } from '../../../../src/db/repositories/announced-video.js';
+import type { Db } from '../../../../src/db/client.js';
 
 describe('MonitoredChannelRepository', () => {
+  let db: Db;
   let repo: MonitoredChannelRepository;
 
   beforeEach(() => {
-    repo = new MonitoredChannelRepository(createTestDb());
+    db = createTestDb();
+    repo = new MonitoredChannelRepository(db);
   });
 
   it('adds and lists a channel for a guild', () => {
@@ -36,5 +40,22 @@ describe('MonitoredChannelRepository', () => {
 
   it('returns false when removing a channel that is not monitored', () => {
     expect(repo.remove('guild-1', 'UC-nope')).toBe(false);
+  });
+
+  it('removes a channel that already has announced-video history, without a foreign key error', () => {
+    const channel = repo.add({
+      guildId: 'guild-1',
+      youtubeChannelId: 'UC1',
+      displayName: 'Chan 1',
+      addedByUserId: 'user-1',
+    });
+    new AnnouncedVideoRepository(db).recordAnnounced({
+      guildId: 'guild-1',
+      monitoredChannelId: channel.id,
+      youtubeVideoId: 'video-1',
+    });
+
+    expect(repo.remove('guild-1', 'UC1')).toBe(true);
+    expect(repo.list('guild-1')).toHaveLength(0);
   });
 });

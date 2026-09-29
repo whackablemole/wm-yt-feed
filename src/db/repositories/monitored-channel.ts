@@ -47,4 +47,9 @@ export class MonitoredChannelRepository {
       .run();
     return result.changes > 0;
   }
+
+  /** Sets or clears the video ID of the live broadcast already notified for this row — see data-model.md. */
+  setActiveLiveVideoId(id: number, activeLiveVideoId: string | null): void {
+    this.db.update(monitoredChannels).set({ activeLiveVideoId }).where(eq(monitoredChannels.id, id)).run();
+  }
 }

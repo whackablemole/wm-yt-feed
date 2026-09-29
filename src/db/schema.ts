@@ -9,6 +9,7 @@ export const monitoredChannels = sqliteTable(
     displayName: text('display_name').notNull(),
     addedByUserId: text('added_by_user_id').notNull(),
     addedAt: integer('added_at', { mode: 'timestamp' }).notNull(),
+    activeLiveVideoId: text('active_live_video_id'),
   },
   (table) => [uniqueIndex('monitored_channels_guild_channel_unique').on(table.guildId, table.youtubeChannelId)],
 );

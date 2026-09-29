@@ -15,6 +15,13 @@
       "when": 1790707601292,
       "tag": "0001_violet_bulldozer",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790710664762,
+      "tag": "0002_lame_living_tribunal",
+      "breakpoints": true
     }
   ]
 }

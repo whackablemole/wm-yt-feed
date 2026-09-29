@@ -1,5 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ChannelResolutionError, resolveChannelReference } from '../../../src/services/youtube.js';
+import {
+  ChannelResolutionError,
+  LiveStatusCheckError,
+  checkLiveStatus,
+  resolveChannelReference,
+} from '../../../src/services/youtube.js';
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -56,5 +61,57 @@ describe('resolveChannelReference', () => {
       vi.fn().mockRejectedValue(new Error('network down')),
     );
     await expect(resolveChannelReference('@example')).rejects.toThrow(ChannelResolutionError);
+  });
+});
+
+describe('checkLiveStatus', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  const LIVE_WATCH_HTML =
+    '<html><head><title>Live now! - YouTube</title>' +
+    '<link rel="canonical" href="https://www.youtube.com/watch?v=liveVideoID">' +
+    '</head><body>"isLiveNow":true</body></html>';
+
+  it('returns the live broadcast when the channel is currently live', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(LIVE_WATCH_HTML, { status: 200 })));
+
+    const result = await checkLiveStatus('UCabcdefghijklmnopqrstuv');
+    expect(result).toEqual({
+      videoId: 'liveVideoID',
+      title: 'Live now!',
+      url: 'https://www.youtube.com/watch?v=liveVideoID',
+    });
+  });
+
+  it('returns null when the channel page has no watch-page canonical link (not live)', async () => {
+    const channelHomeHtml =
+      '<html><head><title>Example Channel - YouTube</title>' +
+      '<link rel="canonical" href="https://www.youtube.com/channel/UCabcdefghijklmnopqrstuv">' +
+      '</head><body></body></html>';
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(channelHomeHtml, { status: 200 })));
+
+    await expect(checkLiveStatus('UCabcdefghijklmnopqrstuv')).resolves.toBeNull();
+  });
+
+  it('returns null for an upcoming/premiere watch page that has no live marker (false-positive guard)', async () => {
+    const upcomingHtml =
+      '<html><head><title>Upcoming premiere - YouTube</title>' +
+      '<link rel="canonical" href="https://www.youtube.com/watch?v=upcomingVideoID">' +
+      '</head><body>"isUpcoming":true</body></html>';
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(upcomingHtml, { status: 200 })));
+
+    await expect(checkLiveStatus('UCabcdefghijklmnopqrstuv')).resolves.toBeNull();
+  });
+
+  it('throws LiveStatusCheckError when the page returns a non-OK status', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('error', { status: 503 })));
+    await expect(checkLiveStatus('UCabcdefghijklmnopqrstuv')).rejects.toThrow(LiveStatusCheckError);
+  });
+
+  it('throws LiveStatusCheckError when the network request fails', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network down')));
+    await expect(checkLiveStatus('UCabcdefghijklmnopqrstuv')).rejects.toThrow(LiveStatusCheckError);
   });
 });

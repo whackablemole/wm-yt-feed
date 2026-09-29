@@ -58,4 +58,20 @@ describe('MonitoredChannelRepository', () => {
     expect(repo.remove('guild-1', 'UC1')).toBe(true);
     expect(repo.list('guild-1')).toHaveLength(0);
   });
+
+  it('sets and clears activeLiveVideoId, persisting across repository instances against the same DB', () => {
+    const channel = repo.add({
+      guildId: 'guild-1',
+      youtubeChannelId: 'UC1',
+      displayName: 'Chan 1',
+      addedByUserId: 'user-1',
+    });
+    expect(channel.activeLiveVideoId).toBeNull();
+
+    repo.setActiveLiveVideoId(channel.id, 'live-video-1');
+    expect(new MonitoredChannelRepository(db).list('guild-1')[0]?.activeLiveVideoId).toBe('live-video-1');
+
+    repo.setActiveLiveVideoId(channel.id, null);
+    expect(new MonitoredChannelRepository(db).list('guild-1')[0]?.activeLiveVideoId).toBeNull();
+  });
 });

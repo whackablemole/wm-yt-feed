@@ -2,8 +2,9 @@
 
 A Discord bot that monitors a configurable set of YouTube channels per server
 and posts an announcement into a designated channel whenever a monitored
-channel publishes a new video. See `specs/001-discord-youtube-bot/` for the
-full spec, plan, and task breakdown this was built from.
+channel publishes a new video or starts a live stream. See
+`specs/001-discord-youtube-bot/` and `specs/002-live-stream-notifications/`
+for the full specs, plans, and task breakdowns this was built from.
 
 ## Requirements
 

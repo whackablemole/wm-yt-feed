@@ -1,0 +1,1 @@
+ALTER TABLE `monitored_channels` ADD `active_live_video_id` text;

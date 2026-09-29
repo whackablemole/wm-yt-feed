@@ -39,8 +39,12 @@ interface YoutubeFeedItem {
   isoDate?: string;
 }
 
+// rss-parser's default User-Agent ('rss-parser') gets intermittently blocked by
+// YouTube under routine polling, surfacing as spurious 404s — send the same UA
+// resolveChannelReference already uses successfully.
 const feedParser: Parser<Record<string, unknown>, YoutubeFeedItem> = new Parser({
   customFields: { item: [['yt:videoId', 'videoId']] },
+  headers: { 'User-Agent': 'wm-yt-feed-bot' },
 });
 
 function toChannelPageUrl(reference: string): string {
